@@ -1,22 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import { getPokemonList, getRandomPokemon } from "./api/utils";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [pokemon, setPokemon] = useState({});
+  const [rendered, setRendered] = useState(false);
+  useEffect(() => {
+    async function fetchRandomPokemonData() {
+      try {
+        const randPokemon = await getRandomPokemon();
+        setPokemon(randPokemon);
+        setRendered(true);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchRandomPokemonData();
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        {rendered ? <img src={pokemon.sprites.front_default} width='300'/> : <a>No</a>}
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
     </div>
   );
